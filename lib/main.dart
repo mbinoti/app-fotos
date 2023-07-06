@@ -1,19 +1,30 @@
+import 'package:appvideo/firebase_media_repository.dart';
+import 'package:appvideo/media_capture_view.dart';
+import 'package:appvideo/media_controller.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  final FirebaseMediaRepository _repository;
+  final MediaController _controller;
+
+  MyApp()
+      : _repository = FirebaseMediaRepository(FirebaseStorage.instance),
+        _controller =
+            MediaController(FirebaseMediaRepository(FirebaseStorage.instance));
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+        body: MediaCaptureView(_controller),
       ),
     );
   }
