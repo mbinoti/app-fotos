@@ -1,6 +1,6 @@
 import 'package:appvideo/firebase_media_repository.dart';
-import 'package:appvideo/media_capture_view.dart';
 import 'package:appvideo/media_controller.dart';
+import 'package:appvideo/media_grid_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: MediaCaptureView(_controller),
+        body: MediaGridView(_controller),
       ),
     );
   }

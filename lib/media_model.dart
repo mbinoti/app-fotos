@@ -1,9 +1,13 @@
 class MediaModel {
   final String id;
   final String url;
-  final MediaType type;
+  final FileType fileType;
 
-  MediaModel({required this.id, required this.url, required this.type});
+  MediaModel({
+    required this.id,
+    required this.url,
+    this.fileType = FileType.unknown,
+  });
 }
 
-enum MediaType { photo, video }
+enum FileType { photo, video, unknown }

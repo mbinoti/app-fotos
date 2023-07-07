@@ -1,4 +1,5 @@
 import 'package:appvideo/media_controller.dart';
+import 'package:appvideo/media_grid_view.dart';
 import 'package:appvideo/media_model.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +15,7 @@ class MediaCaptureView extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () async {
-              String? downloadUrl =
-                  await _controller.captureAndUploadMedia(MediaType.photo);
+              String? downloadUrl = await _controller.captureAndUploadMedia();
               if (downloadUrl != null) {
                 print('Photo uploaded: $downloadUrl');
               }
@@ -24,14 +24,23 @@ class MediaCaptureView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              String? downloadUrl =
-                  await _controller.captureAndUploadMedia(MediaType.video);
+              String? downloadUrl = await _controller.captureAndUploadMedia();
               if (downloadUrl != null) {
                 print('Video uploaded: $downloadUrl');
               }
             },
             child: const Text('Capture Video'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MediaGridView(_controller)),
+              );
+            },
+            child: const Text('View Media'),
+          )
         ],
       ),
     );
