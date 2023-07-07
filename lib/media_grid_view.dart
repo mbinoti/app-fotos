@@ -23,9 +23,10 @@ class MediaGridView extends StatelessWidget {
             icon: const Icon(Icons.photo),
             onPressed: () async {
               String? downloadUrl = await _controller.captureAndUploadMedia();
-              if (downloadUrl != null) {
-                print('Photo uploaded: $downloadUrl');
-              }
+              _controller.getAllMedia();
+              // if (downloadUrl != null) {
+              //   print('Photo uploaded: $downloadUrl');
+              // }
             },
           ),
         ],
@@ -36,31 +37,32 @@ class MediaGridView extends StatelessWidget {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator();
           }
-          List<MediaModel> mediaList = snapshot.data!;
+          // List<MediaModel> mediaList = snapshot.data!;//
           return GridView.builder(
-            itemCount: mediaList.length,
+            itemCount: snapshot.data!.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2),
-            itemBuilder: (context, index) {
-              MediaModel media = mediaList[index];
-              if (media.fileType == FileType.photo) {
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: CachedNetworkImage(
-                          imageUrl: media.url,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
+            itemBuilder: (BuildContext context, index) {
+              MediaModel media = snapshot.data![index]; //
+
+              return Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: CachedNetworkImage(
+                        imageUrl: media.url,
+                        fit: BoxFit.cover,
+                        // placeholder: (context, url) =>
+                        //     const CircularProgressIndicator(),
+                        // errorWidget: (context, url, error) =>
+                        //     const Icon(Icons.error),
                       ),
                     ),
-                  ],
-                );
-              }
+                  ),
+                ],
+              );
             },
           );
         },

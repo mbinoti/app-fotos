@@ -1,5 +1,6 @@
 import 'package:appvideo/firebase_media_repository.dart';
 import 'package:appvideo/media_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -10,17 +11,21 @@ class MediaController {
 
   MediaController(this._repository);
 
-  // ValueNotifier variable
-  // ValueNotifier<List<MediaModel>> mediaList =
-  //     ValueNotifier<List<MediaModel>>([]);
-
   Future<String?> captureAndUploadMedia() async {
     XFile? pickedFile;
-    pickedFile = await _picker.pickVideo(source: ImageSource.camera);
+    pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       File file = File(pickedFile.path); // Convert to File
       String downloadUrl = await _repository.uploadFile('assets/', file);
+
+      // após uploading do arquivo, adiciona novo doc firestore
+      await FirebaseFirestore.instance.collection('media').add({
+        'url': downloadUrl,
+        'id': pickedFile.name,
+        // Add any other relevant metadata...
+      });
+
       return downloadUrl;
     } else {
       print('No media selected.');
@@ -28,8 +33,23 @@ class MediaController {
     }
   }
 
-  // Método para obter todas as mídias
+  // Método para obter todas as mídias.
   Stream<List<MediaModel>> getAllMedia() {
-    return _repository.getAllMedia('assets/');
+    return FirebaseFirestore.instance
+        .collection('media')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return MediaModel(
+          url: doc['url'],
+          id: doc['id'],
+          // Map any other relevant metadata...
+        );
+      }).toList();
+    });
   }
+
+  // Stream<List<MediaModel>> getAllMedia() {
+  //   return _repository.getAllMedia('assets/');
+  // }
 }
