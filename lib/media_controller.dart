@@ -1,7 +1,7 @@
 import 'package:appvideo/firebase_media_repository.dart';
 import 'package:appvideo/media_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -49,7 +49,7 @@ class MediaController {
     });
   }
 
-  // Stream<List<MediaModel>> getAllMedia() {
-  //   return _repository.getAllMedia('assets/');
-  // }
+  Future<void> deleteMedia(MediaModel media) async {
+    await _repository.deleteMedia('assets/', media);
+  }
 }

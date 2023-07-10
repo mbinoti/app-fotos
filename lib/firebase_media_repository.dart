@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appvideo/media_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:path/path.dart';
 
 class FirebaseMediaRepository {
   final FirebaseStorage _firebaseStorage;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   // final StreamController<List<MediaModel>> _mediaStreamController =
   //     StreamController<List<MediaModel>>();
 
@@ -25,7 +28,6 @@ class FirebaseMediaRepository {
     return await snapshot.ref.getDownloadURL();
   }
 
-  // download
   // download
   Stream<List<MediaModel>> getAllMedia(String path) async* {
     final ref = _firebaseStorage.ref().child(path);
@@ -52,5 +54,27 @@ class FirebaseMediaRepository {
     }
 
     yield mediaList;
+  }
+
+  Future<void> deleteMedia(String path, MediaModel media) async {
+    // deletar o documento do firestore.
+    // Recuperar a referência do documento pelo 'id'
+    QuerySnapshot snapshot = await _firestore
+        .collection('media')
+        .where('id', isEqualTo: media.id)
+        .get();
+
+    // Assume que só tem um documento que corresponde
+    if (snapshot.docs.isNotEmpty) {
+      DocumentSnapshot document = snapshot.docs.first;
+
+      // Deletar o arquivo do Firebase Storage primeiro.
+      print('Deletando o arquivo: $path${media.id}');
+      final ref = _firebaseStorage.ref().child('$path${media.id}');
+      await ref.delete();
+
+      // Deletar o documento do Firestore
+      await document.reference.delete();
+    }
   }
 }

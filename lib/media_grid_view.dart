@@ -17,6 +17,7 @@ class MediaGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.amber,
         title: const Text('Media Grid View'),
         actions: [
           IconButton(
@@ -45,23 +46,52 @@ class MediaGridView extends StatelessWidget {
             itemBuilder: (BuildContext context, index) {
               MediaModel media = snapshot.data![index]; //
 
-              return Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: CachedNetworkImage(
-                        imageUrl: media.url,
-                        fit: BoxFit.cover,
-                        // placeholder: (context, url) =>
-                        //     const CircularProgressIndicator(),
-                        // errorWidget: (context, url, error) =>
-                        //     const Icon(Icons.error),
+              return GestureDetector(
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Delete Media'),
+                        content: const Text('Confirma?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              // deleta o arquivo e o documento.
+                              await _controller.deleteMedia(media);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: CachedNetworkImage(
+                          imageUrl: media.url,
+                          fit: BoxFit.cover,
+                          // placeholder: (context, url) =>
+                          //     const CircularProgressIndicator(),
+                          // errorWidget: (context, url, error) =>
+                          //     const Icon(Icons.error),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           );
