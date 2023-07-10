@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appvideo/detail_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:appvideo/media_controller.dart';
@@ -47,6 +48,14 @@ class MediaGridView extends StatelessWidget {
               MediaModel media = snapshot.data![index]; //
 
               return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return DetailScreen(
+                      imageUrl: media.url,
+                      tag: 'image$index', // Use a unique tag for each image
+                    );
+                  }));
+                },
                 onLongPress: () {
                   showDialog(
                     context: context,
