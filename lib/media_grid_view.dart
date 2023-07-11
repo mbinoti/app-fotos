@@ -19,16 +19,24 @@ class MediaGridView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
-        title: const Text('Media Grid View'),
+        title: const Text('Image Storage'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.photo),
+            icon: const Icon(Icons.photo_library),
             onPressed: () async {
-              String? downloadUrl = await _controller.captureAndUploadMedia();
+              String? downloadUrl = await _controller.captureAndUploadMedia(
+                fromGallery: true,
+              );
               _controller.getAllMedia();
-              // if (downloadUrl != null) {
-              //   print('Photo uploaded: $downloadUrl');
-              // }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.camera_alt),
+            onPressed: () async {
+              String? downloadUrl = await _controller.captureAndUploadMedia(
+                fromGallery: false,
+              );
+              _controller.getAllMedia();
             },
           ),
         ],

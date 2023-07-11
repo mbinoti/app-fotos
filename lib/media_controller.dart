@@ -11,10 +11,14 @@ class MediaController {
 
   MediaController(this._repository);
 
-  Future<String?> captureAndUploadMedia() async {
+  Future<String?> captureAndUploadMedia({required bool fromGallery}) async {
     XFile? pickedFile;
-    pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
+    if (fromGallery) {
+      pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    } else {
+      pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    }
     if (pickedFile != null) {
       File file = File(pickedFile.path); // Convert to File
       String downloadUrl = await _repository.uploadFile('assets/', file);

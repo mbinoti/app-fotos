@@ -1,5 +1,4 @@
-# app media no firestore.
-
+# app fotos.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/6609513/245206812-4dbaf28e-19ad-4a47-acc9-29a053b758d7.jpg" width="350">
@@ -9,7 +8,8 @@
 
 # Funcionalidades
 
-* abrir camera no device tirar uma foto e salvar no firebase storage e firestore.
+* selecionar arquivo da gallery e gravar.
+* tirar foto e gravar.
 
 # packages utilizados
 
